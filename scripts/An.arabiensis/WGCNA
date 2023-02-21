@@ -1,0 +1,45 @@
+
+#import dataset
+merged_ara <- read_excel("merged_ara.xlsx") #("Data/Anopheles_arabiensis/merged_ara")
+
+#filtering the annotated file
+noncoding <- dplyr::filter(merged_ara,grepl('ncRNA',merged_ara$`Gene Type`))
+filtered <- dplyr::filter(merged_ara,!grepl('ncRNA',merged_ara$`Gene Type`))
+filtered <- dplyr::filter(filtered,!grepl('translation|pre-mRNA|tRNA|spliceosomal RNA|microRNA|small nucleolar|snRNA|ribosomal|tRNA',filtered$`Product Description`))
+
+#input data
+expressiondata = filtered[,-(2:3)] #remove the annotation columns and remain only with read counts and geneid
+de_input = as.matrix(expressiondata[,-1,])
+row.names(de_input) = expressiondata$Geneid
+
+meta_df <- data.frame( Sample = names(expressiondata[-1])) %>%
+  mutate(
+    Type = gsub("-.*","", Sample) %>% gsub("[.].*","", .)
+  ) #get shorter treatment names
+
+#filter low counts and create a new format of expression data for WGCNA 
+keep <- apply(de_input, 1, max) >= 10
+de_input <- de_input[keep,]
+expressiondata <- de_input
+
+# obtain logCPM unnormalized for plotting purposes ------------------------------------------
+# Here, the norm.factors value is 1 for all samples
+logcpm.unnorm.counts <-cpm(expressiondata, log = TRUE, prior.count = 2, normalized.lib.sizes = TRUE)
+
+# Normalize for composition bias using TMM
+filtered.counts <-calcNormFactors(expressiondata, method ='TMM')
+
+# Convert counts per million per gene to log counts per million for further downstream analysis.
+logcpm.norm.counts <-cpm(expressiondata, log = TRUE, prior.count = 2, normalized.lib.sizes = TRUE)
+logcpm.norm.counts <- t(logcpm.norm.counts)
+
+#Group data in a dendogram to check outliers
+sampleTree = hclust(dist(logcpm.norm.counts), method = "average")
+par(cex = 0.6)
+par(mar = c(0,4,2,0))
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, 
+     cex.axis = 1.5, cex.main = 2)
+
+#cutoff
+clust = cutreeStatic(sampleTree, cutHeight = 500,minSize = 01)
+table(clust)
