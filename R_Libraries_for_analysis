@@ -1,0 +1,16 @@
+# Loading WGCNA
+
+library(WGCNA)
+library(tidyverse)     # tidyverse will pull in ggplot2, readr, other useful libraries
+library(magrittr)      # provides the %>% operator
+library(WGCNA) 
+library(ggplot2)
+library(readxl)
+library(DESeq2)
+library(gplots)
+library("flashClust")
+library("igraph")
+library(edgeR)
+
+# ensure results are reproducible
+set.seed(1)
