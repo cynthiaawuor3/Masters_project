@@ -182,4 +182,26 @@ module.hub.genes <- chooseTopHubInEachModule(network.counts, mergedColors,
 # # A list of module hub genes
 module.hub.genes
 
+##############################################################################
+## Network export to cytoscape
+##############################################################################
+# obtain gene ids
+genes = colnames(network.counts)
+
+# select module genes
+inModule = is.finite(match(mergedColors, mergedColors))
+modGenes = genes[inModule] 
+
+# select the corresponding dissTOM based on module genes
+modTOM = TOM[inModule, inModule]
+dimnames(modTOM) = list(modGenes, modGenes)
+
+#export edge and node file for visualization in cytoscape-------------------------------------------------------------------------------------------------------------
+exportNetworkToCytoscape(modTOM,
+                         edgeFile = "CytoscapeEdgeFilearabiensis.txt",
+                         nodeFile = "CytoscapeNodeFile.txt",
+                         weighted = TRUE,
+                         threshold = 0.1,
+                         nodeNames = modGenes,
+                         nodeAttr = mergedColors[inModule])
 
