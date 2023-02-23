@@ -182,25 +182,6 @@ module.hub.genes <- chooseTopHubInEachModule(network.counts, mergedColors,
 # # A list of module hub genes
 module.hub.genes
 
-################################################################
-##Creating a list of genes with their respective modules 
-################################################################
-
-
-# create a dataframe with node attributes
-enriched.module.colours <- mergedColors[inModule]           #get enriched module colours from mergedColors
-node.attributes <- cbind(modGenes, module=mergedColors)     # get node attr. for the whole network
-# node.attributes <- cbind(modGenes, module=enriched.module.colours) # node atrr. for enriched modules
-
-node.attributes <- as.data.frame(node.attributes)
-
-# Add RGB versions of colour modules
-node.attributes$colourRGB <- col2hex(node.attributes$module)
-
-# write out a node attributes files with hexadecimal colour names for module genes
-write.csv(node.attributes, "nodeattributes.csv")
-
-
 ##############################################################################
 ## Network export to cytoscape
 ##############################################################################
@@ -223,3 +204,24 @@ exportNetworkToCytoscape(modTOM,
                          threshold = 0.1,
                          nodeNames = modGenes,
                          nodeAttr = mergedColors[inModule])
+                         
+
+
+################################################################
+##Creating a list of genes with their respective modules 
+################################################################
+
+
+# create a dataframe with node attributes
+enriched.module.colours <- mergedColors[inModule]           #get enriched module colours from mergedColors
+node.attributes <- cbind(modGenes, module=mergedColors)     # get node attr. for the whole network
+# node.attributes <- cbind(modGenes, module=enriched.module.colours) # node atrr. for enriched modules
+
+node.attributes <- as.data.frame(node.attributes)
+
+# Add RGB versions of colour modules
+node.attributes$colourRGB <- col2hex(node.attributes$module)
+
+# write out a node attributes files with hexadecimal colour names for module genes
+write.csv(node.attributes, "nodeattributes.csv")
+
