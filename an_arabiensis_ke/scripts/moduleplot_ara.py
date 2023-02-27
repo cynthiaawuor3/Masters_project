@@ -2,7 +2,7 @@
 """
 Created on Mon Feb 27 20:20:04 2023
 
-@author: user
+@author: CYNTHIA AWUOR
 """
 
 import matplotlib.pyplot as plt
