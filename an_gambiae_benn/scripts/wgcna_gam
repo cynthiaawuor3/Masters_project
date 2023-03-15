@@ -31,6 +31,7 @@ filtered.counts <-calcNormFactors(expressiondata, method ='TMM')
 
 # Convert counts per million per gene to log counts per million for further downstream analysis.
 logcpm.norm.counts <-cpm(expressiondata, log = TRUE, prior.count = 2, normalized.lib.sizes = TRUE)
+write.csv(logcpm.norm.counts, file = "normexpression_gam.csv")
 logcpm.norm.counts <- t(logcpm.norm.counts)
 
 #Group data in a dendogram to check outliers--------------------------------------------------------------------------------------------------------------------------
