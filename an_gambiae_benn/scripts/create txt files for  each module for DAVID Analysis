@@ -1,0 +1,15 @@
+# Load the data
+data <- read.csv("expression_module_counts.csv") 
+
+# Define the list of modules you're interested in
+modules_of_interest <- c('blue', 'honeydew1', 'grey', 'black', 'darkorange2', 'lightgreen', 'orangered4', 'lightyellow', 'cyan', 'darkred', 'darkturquoise', 'darkorange', 'saddlebrown', 'plum1', 'mediumpurple3', 'lightcyan1', 'ivory', 'bisque4', 'lightpink4', 'coral1', 'antiquewhite4', 'coral2', 'skyblue2', 'yellow4', 'skyblue1', 'orangered3')
+
+# Loop through the modules of interest and extract the corresponding genes
+for (module in modules_of_interest) {
+  # Subset the data to only include the genes with the current module
+  genes_of_interest <- data$Geneid[data$module == module]
+  
+  # Write the genes to a text file
+  write.table(genes_of_interest, file = paste0(module, "_genes.txt"), quote = FALSE, row.names = FALSE, col.names = FALSE)
+}
+
